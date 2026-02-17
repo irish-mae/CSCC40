@@ -1,23 +1,13 @@
-import java.util.Locale;  // Controls locale-specific formatting behavior.
-import java.util.Random;  // Generates random numbers for payout sampling.
-import java.util.Scanner; // Reads user input from the keyboard.
+import java.util.Locale;  
+import java.util.Random;  
+import java.util.Scanner; 
 
 public class MiniCasino {
-    // Possible payout values the slot machine can return per play.
     private static final int[] PAYOUTS = {0, 1, 5, 100};
-
-    // Cost to play one round.
     private static final int COST_PER_PLAY = 1;
-
-    // One play always consumes 10 seconds in this world.
     private static final int SECONDS_PER_PLAY = 10;
-
-    // Requested fixed total play time.
     private static final int TOTAL_PLAY_TIME = 90;
 
-    // Fixed payout probabilities for both machines.
-    // Index mapping must match PAYOUTS array: 0, 1, 5, 100.
-    // 50%, 30%, 15%, 5%
     private static final double[] FIXED_CHANCES = {0.50, 0.30, 0.15, 0.05};
 
     /**
@@ -27,35 +17,19 @@ public class MiniCasino {
     public static void main(String[] args) {
         // Force US locale so decimals stay consistent (e.g., dot instead of comma).
         Locale.setDefault(Locale.US);
-
-        // Scanner for user input.
         Scanner scanner = new Scanner(System.in);
-
-        // Random generator used by samplePayout.
         Random random = new Random();
 
-        // Header output.
         System.out.println("=== MINI-CASINO WORLD ===");
 
-        // Ask only for starting money (time and probabilities are fixed per your request).
         int startingMoney = readNonNegativeInt(scanner, "Enter amount of money to start with (Php): ");
-
-        // Use fixed total play time.
         int totalPlayTime = TOTAL_PLAY_TIME;
 
-        // Both machines use the same fixed probability distribution.
-        // clone() avoids accidental shared-array mutation.
         double[] machine1Chances = FIXED_CHANCES.clone();
         double[] machine2Chances = FIXED_CHANCES.clone();
 
-        // Maximum plays allowed by time (90/10 = 9 rounds).
         int maxTimeBasedPlays = totalPlayTime / SECONDS_PER_PLAY;
-
-        // Current money during simulation.
         int money = startingMoney;
-
-        // Count how many times each machine has been played.
-        // Index 0 = machine 1, index 1 = machine 2.
         int[] timesPlayed = new int[2];
 
         // Store last payout observed for each machine.
@@ -238,28 +212,18 @@ public class MiniCasino {
      * Reads a non-negative integer from user input with validation.
      */
     private static int readNonNegativeInt(Scanner scanner, String prompt) {
-        // Keep asking until valid input is entered.
         while (true) {
-            // Show prompt.
             System.out.print(prompt);
-
-            // Read and trim input line.
             String line = scanner.nextLine().trim();
 
             try {
-                // Parse to integer.
                 int value = Integer.parseInt(line);
-
-                // Reject negatives.
                 if (value < 0) {
                     System.out.println("Please enter a non-negative integer.");
                     continue;
                 }
-
-                // Return valid value.
                 return value;
             } catch (NumberFormatException e) {
-                // Handle invalid number format.
                 System.out.println("Invalid input. Please enter a whole number.");
             }
         }
